@@ -1,12 +1,8 @@
 package com.example;
 
-import com.beust.jcommander.IParameterValidator;
-import com.beust.jcommander.ParameterException;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import com.beust.jcommander.*;
+import java.io.*;
+import java.nio.file.*;
 
 public class ValidatePath implements IParameterValidator {
     public void validate(String name, String p) throws ParameterException {

@@ -1,7 +1,6 @@
 package com.example;
 
-import com.beust.jcommander.IParameterValidator;
-import com.beust.jcommander.ParameterException;
+import com.beust.jcommander.*;
 
 public class ValidatePrefix implements IParameterValidator {
     public void validate(String name, String p) throws ParameterException {

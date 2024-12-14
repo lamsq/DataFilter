@@ -37,31 +37,11 @@ public class Main {
 
         System.out.println("Execution starting...");
 
+        //parsing arguments
         Main main = new Main();
         JCommander.newBuilder().addObject(main).build().parse(args);
 
-//        if(path!=null){
-//            System.out.println("Custom path: "+path);
-//            ValidPath vp = new ValidPath();
-//            vp.validate("Path", path);
-//        }
-//
-//        if(prefix!=null){
-//            System.out.println("Prefix: "+prefix);
-//        }
-//
-//        if(statShort){
-//            System.out.println("Statistics mode short");
-//        }
-//
-//        if(statFull){
-//            System.out.println("Statistics mode full");
-//        }
-//
-//        if(adjunct){
-//            System.out.println("Adjunct data to existing files");
-//        }
-
+        //checks if input files are present
         if(!inputData.isEmpty()) {
             for(String s : inputData){
                 File file = new File(s);
@@ -73,18 +53,20 @@ public class Main {
         }
         else {
             throw new IllegalArgumentException("No input files specified;");
-            //System.out.println("No input files specified;");
         }
 
+        //creating file objects
         File str = new File(path+prefix+"strings.txt");
         File longs = new File(path+prefix+"integer.txt");
         File doub = new File(path+prefix+"floats.txt");
 
+        //mapping files to corresponding data structures
         Map<File, List<?>> dataMap = new HashMap<>();
         dataMap.put(str, stringData);
         dataMap.put(longs, longData);
         dataMap.put(doub, doubleData);
 
+        //parsing the original data and adding it to the corresponding data structure
         for(File f : inputFiles){
             try (BufferedReader br = new BufferedReader(new FileReader(f))) {
                 String line;
@@ -112,11 +94,13 @@ public class Main {
             }
         }
 
+        //deleting entries with empty data structures
         for(Map.Entry<File, List<?>> entry : dataMap.entrySet()){
             if(dataMap.get(entry.getKey()).isEmpty())
                 dataMap.remove(entry.getKey());
         }
 
+        //prints statistics for each type of data (depends on the stat flag)
         for(Map.Entry<File, List<?>> entry : dataMap.entrySet()){
             List<?> value = dataMap.get(entry.getKey());
             File key = entry.getKey();
@@ -127,6 +111,7 @@ public class Main {
             }
         }
 
+        //writes data into the corresponding file
         for (Map.Entry<File, List<?>> entry : dataMap.entrySet()) {
             File file = entry.getKey();
             List<?> value = entry.getValue();
@@ -159,6 +144,7 @@ public class Main {
     public static String getFullStat(List<?> data){
         DoubleStream stream;
 
+        //checks the data type
         if (data.get(0) instanceof String)
             stream = data.stream().map(String.class::cast).mapToDouble(String::length);
         else if (data.get(0) instanceof Long)
@@ -166,6 +152,7 @@ public class Main {
         else
             stream = data.stream().map(Double.class::cast).mapToDouble(Double::doubleValue);
 
+        //gets statistics
         DoubleSummaryStatistics stats = stream.summaryStatistics();
         StringBuilder stat = new StringBuilder("");
 
